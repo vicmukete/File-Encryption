@@ -1,0 +1,5 @@
+Generate decryption key
+
+encrypt and decode are the main methods
+
+
