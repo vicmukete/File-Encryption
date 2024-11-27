@@ -25,9 +25,7 @@ def encrypt_file(filename):
         data = file.read()
 
     # token
-    print(fernet, '\n')
     encrypted_data = fernet.encrypt(data)
-    print(encrypted_data)
 
     # here the file extensions is changed when the file is encrypted
     # this is make sure that ik which files have already been encrypted
@@ -46,7 +44,7 @@ def encrypt_folder(folder_path):
             # all wi-fi pws will be encrypted
             if '.xml' in file:
                 print(file)
-                print(f'Encrypting files in {folder_path} ...')
+                print(f'Encrypting files in {folder_path} ...\n')
                 encrypt_file(filepath)
 
 
@@ -57,7 +55,6 @@ def decrypt_file(filename):
         # is the file content not recognized?
         # is the key not recognized?
         data = file.read()
-    print(fernet)
     decrypted_data = fernet.decrypt(data)
     # writes the decrypted content back into the file
     new_filename = filename.replace('.enc', '.xml')
@@ -72,25 +69,22 @@ def decrypt_folder(folder_path):
         for file in files:
             filepath = os.path.join(root, file)
             if '.enc' in file:
-                print(f'Decrypting files in {folder_path} ...')
                 print(file)
+                print(f'Decrypting files in {folder_path} ...\n')
                 decrypt_file(filepath)
 
-decrypt_folder(folderPath)
 
-
-'''while True:
+while True:
     try:
         encryptOrDecrypt = input(
-            'Would you like to encrypt or decrypt your folder [e (encrypt) or d (decrypt)]: ').lower()
+            '[(e)ncrypt or (d)ecrypt]: ').lower()
         if encryptOrDecrypt == 'e':
-            encrypt_folder(fernetKey, folderPath)
+            encrypt_folder(folderPath)
             print('Complete :)')
             break
-        elif encrypt_file == 'd':
-            decrypt_folder(fernetKey, folderPath)
+        elif encryptOrDecrypt == 'd':
+            decrypt_folder(folderPath)
             print('Complete :)')
             break
     except SyntaxError:
         print('Please enter a valid response')
-'''
