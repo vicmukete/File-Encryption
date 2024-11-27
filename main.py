@@ -1,30 +1,44 @@
 from cryptography.fernet import Fernet
 import os
 
-# Initial Documentation Sample Code
-'''key1 = Fernet.generate_key()
-f = Fernet(key1)
-token = f.encrypt(b'What i want to encrypt')
-print(token)
-clear = f.decrypt(token)
-print(clear.decode())'''
+folderPath = r'C:\Users\muket\Desktop\Projects\Unethical\WiFi PWs'
+
+# Saves the encryption/decryption key
+key_path = r'C:\Users\muket\Desktop\Real Projects\File Encryption\key.txt'
+
+if not os.path.exists(key_path):
+    fernetKey = Fernet.generate_key()
+    with open(key_path, 'wb') as key_file:
+        key_file.write(fernetKey)
+else:
+    with open(key_path, 'rb') as key_file:
+        fernetKey = key_file.read()
+
+fernet = Fernet(fernetKey)
 
 
 # encrypt a single folder
-def encrypt_file(key, filename):
+def encrypt_file(filename):
+    # open the file as binary because the
+    # Fernet class requires it to function
     with open(filename, 'rb') as file:
         data = file.read()
 
-    fernet = Fernet(key)
     # token
+    print(fernet, '\n')
     encrypted_data = fernet.encrypt(data)
-    with open(filename + '.enc', 'wb') as file:
+    print(encrypted_data)
+
+    # here the file extensions is changed when the file is encrypted
+    # this is make sure that ik which files have already been encrypted
+    new_filename = filename.replace(".xml", ".enc")
+    with open(new_filename, 'wb') as file:
         file.write(encrypted_data)
     os.remove(filename)
 
 
 # encrypt all files in the folder
-def encrypt_folder(key, folder_path):
+def encrypt_folder(folder_path):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             filepath = os.path.join(root, file)
@@ -33,48 +47,37 @@ def encrypt_folder(key, folder_path):
             if '.xml' in file:
                 print(file)
                 print(f'Encrypting files in {folder_path} ...')
-                encrypt_file(key, filepath)
+                encrypt_file(filepath)
 
 
 # decrypt a single file
-def decrypt_file(key, filename):
+def decrypt_file(filename):
+    # read binary
     with open(filename, 'rb') as file:
+        # is the file content not recognized?
+        # is the key not recognized?
         data = file.read()
-    fernet = Fernet(key)
+    print(fernet)
     decrypted_data = fernet.decrypt(data)
-
-    original_filename = filename[:-4]
-    with open(original_filename, 'wb') as file:
+    # writes the decrypted content back into the file
+    new_filename = filename.replace('.enc', '.xml')
+    with open(new_filename, 'wb') as file:
         file.write(decrypted_data)
     os.remove(filename)
 
 
 # decrypt the entire folder
-def decrypt_folder(key, folder_path):
+def decrypt_folder(folder_path):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             filepath = os.path.join(root, file)
             if '.enc' in file:
                 print(f'Decrypting files in {folder_path} ...')
                 print(file)
-                decrypt_file(key, filepath)
+                decrypt_file(filepath)
 
+decrypt_folder(folderPath)
 
-folderPath = r'C:\Users\muket\Desktop\Projects\Unethical\WiFi PWs'
-
-
-# Saves the encryption/decryption key
-key_path = r'C:\Users\muket\Desktop\Real Projects\File Encryption\key.key'
-
-if not os.path.exists(key_path):
-    fernetKey = Fernet.generate_key()
-    with open(key_path, 'wb') as key_file:
-        key_file.write(fernetKey)
-else:
-    with open(key_path, 'rb') as key_file:
-        fernetKey = key_path
-
-decrypt_folder(fernetKey, folderPath)
 
 '''while True:
     try:
