@@ -20,6 +20,7 @@ def encrypt_file(key, filename):
     encrypted_data = fernet.encrypt(data)
     with open(filename + '.enc', 'wb') as file:
         file.write(encrypted_data)
+    os.remove(filename)
 
 
 # encrypt all files in the folder
@@ -31,6 +32,7 @@ def encrypt_folder(key, folder_path):
             # all wi-fi pws will be encrypted
             if '.xml' in file:
                 print(file)
+                print(f'Encrypting files in {folder_path} ...')
                 encrypt_file(key, filepath)
 
 
@@ -41,8 +43,10 @@ def decrypt_file(key, filename):
     fernet = Fernet(key)
     decrypted_data = fernet.decrypt(data)
 
-    with open(filename, 'wb') as file:
+    original_filename = filename[:-4]
+    with open(original_filename, 'wb') as file:
         file.write(decrypted_data)
+    os.remove(filename)
 
 
 # decrypt the entire folder
@@ -51,6 +55,7 @@ def decrypt_folder(key, folder_path):
         for file in files:
             filepath = os.path.join(root, file)
             if '.enc' in file:
+                print(f'Decrypting files in {folder_path} ...')
                 print(file)
                 decrypt_file(key, filepath)
 
@@ -69,8 +74,9 @@ else:
     with open(key_path, 'rb') as key_file:
         fernetKey = key_path
 
+decrypt_folder(fernetKey, folderPath)
 
-while True:
+'''while True:
     try:
         encryptOrDecrypt = input(
             'Would you like to encrypt or decrypt your folder [e (encrypt) or d (decrypt)]: ').lower()
@@ -84,3 +90,4 @@ while True:
             break
     except SyntaxError:
         print('Please enter a valid response')
+'''
