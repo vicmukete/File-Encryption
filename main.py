@@ -4,7 +4,7 @@ import os
 folderPath = r'C:\Users\muket\Desktop\Projects\Unethical\WiFi PWs'
 
 # Saves the encryption/decryption key
-key_path = r'C:\Users\muket\Desktop\Real Projects\File Encryption\key.txt'
+key_path = r'C:\Users\muket\Desktop\Real Projects\File Encryption\key.key'
 
 if not os.path.exists(key_path):
     fernetKey = Fernet.generate_key()
